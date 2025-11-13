@@ -15,6 +15,7 @@ interface GameState {
 }
 
 interface ChessBoardProps {
+  gameId: number
   onMove: (move: string) => void
   isPlayerTurn: boolean
   gameState: GameState
