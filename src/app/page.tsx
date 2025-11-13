@@ -10,7 +10,7 @@ import GameRoom from '@/components/GameRoom'
 import LeaderboardDisplay from '@/components/LeaderboardDisplay'
 
 // Contract address - replace with deployed address
-const CONTRACT_ADDRESS = '0xAd54eC47a610f8495b9bC96CB6E09661E4FC42a2' // To be updated after deployment
+const CONTRACT_ADDRESS = '0x5f481427Dc681635dDEE38255da2E98FcaC90CeE' // Updated after deployment
 
 export default function Home() {
   const { isConnected } = useAccount()

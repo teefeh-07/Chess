@@ -110,11 +110,8 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
         }
 
         // Keep only top 10
-        if (leaderboard.length > 10) {
-            // Resize array to 10
-            assembly {
-                mstore(leaderboard, 10)
-            }
+        while (leaderboard.length > 10) {
+            leaderboard.pop();
         }
     }
 

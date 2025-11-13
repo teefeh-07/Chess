@@ -28,32 +28,23 @@ import type {
 } from "../common";
 
 export declare namespace QuantumChessArena {
-  export type GameStruct = {
-    player1: PromiseOrValue<string>;
-    player2: PromiseOrValue<string>;
-    moves: PromiseOrValue<string>[];
-    startTime: PromiseOrValue<BigNumberish>;
-    status: PromiseOrValue<BigNumberish>;
-    winner: PromiseOrValue<string>;
-    board: PromiseOrValue<BigNumberish>[];
+  export type LeaderboardEntryStruct = {
+    player: PromiseOrValue<string>;
+    rating: PromiseOrValue<BigNumberish>;
+    gamesPlayed: PromiseOrValue<BigNumberish>;
+    gamesWon: PromiseOrValue<BigNumberish>;
   };
 
-  export type GameStructOutput = [
+  export type LeaderboardEntryStructOutput = [
     string,
-    string,
-    string[],
     BigNumber,
-    number,
-    string,
-    number[]
+    BigNumber,
+    BigNumber
   ] & {
-    player1: string;
-    player2: string;
-    moves: string[];
-    startTime: BigNumber;
-    status: number;
-    winner: string;
-    board: number[];
+    player: string;
+    rating: BigNumber;
+    gamesPlayed: BigNumber;
+    gamesWon: BigNumber;
   };
 }
 
@@ -62,15 +53,10 @@ export interface QuantumChessArenaInterface extends utils.Interface {
     "achievementCounter()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "createGame(address)": FunctionFragment;
-    "endGame(uint256,address)": FunctionFragment;
-    "gameCounter()": FunctionFragment;
-    "games(uint256)": FunctionFragment;
-    "getActiveGames()": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
-    "getGameState(uint256)": FunctionFragment;
+    "getLeaderboard()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
-    "makeMove(uint256,string)": FunctionFragment;
+    "leaderboard(uint256)": FunctionFragment;
     "mintAchievement(address,string)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
@@ -80,6 +66,7 @@ export interface QuantumChessArenaInterface extends utils.Interface {
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "submitScore(bool)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenByIndex(uint256)": FunctionFragment;
@@ -95,15 +82,10 @@ export interface QuantumChessArenaInterface extends utils.Interface {
       | "achievementCounter"
       | "approve"
       | "balanceOf"
-      | "createGame"
-      | "endGame"
-      | "gameCounter"
-      | "games"
-      | "getActiveGames"
       | "getApproved"
-      | "getGameState"
+      | "getLeaderboard"
       | "isApprovedForAll"
-      | "makeMove"
+      | "leaderboard"
       | "mintAchievement"
       | "name"
       | "owner"
@@ -113,6 +95,7 @@ export interface QuantumChessArenaInterface extends utils.Interface {
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "submitScore"
       | "supportsInterface"
       | "symbol"
       | "tokenByIndex"
@@ -136,40 +119,20 @@ export interface QuantumChessArenaInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "createGame",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "endGame",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "gameCounter",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "games",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getActiveGames",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "getApproved",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
-    functionFragment: "getGameState",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "getLeaderboard",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "makeMove",
-    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<string>]
+    functionFragment: "leaderboard",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "mintAchievement",
@@ -211,6 +174,10 @@ export interface QuantumChessArenaInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
+    functionFragment: "submitScore",
+    values: [PromiseOrValue<boolean>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -250,30 +217,22 @@ export interface QuantumChessArenaInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "createGame", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "endGame", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "gameCounter",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "games", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "getActiveGames",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "getApproved",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getGameState",
+    functionFragment: "getLeaderboard",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "makeMove", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "leaderboard",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "mintAchievement",
     data: BytesLike
@@ -299,6 +258,10 @@ export interface QuantumChessArenaInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "submitScore",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -333,11 +296,9 @@ export interface QuantumChessArenaInterface extends utils.Interface {
     "Approval(address,address,uint256)": EventFragment;
     "ApprovalForAll(address,address,bool)": EventFragment;
     "BatchMetadataUpdate(uint256,uint256)": EventFragment;
-    "GameCreated(uint256,address,address)": EventFragment;
-    "GameEnded(uint256,address)": EventFragment;
     "MetadataUpdate(uint256)": EventFragment;
-    "MoveMade(uint256,address,string,uint256)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "ScoreSubmitted(address,uint256,bool)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
@@ -345,11 +306,9 @@ export interface QuantumChessArenaInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ApprovalForAll"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "BatchMetadataUpdate"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "GameCreated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "GameEnded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "MetadataUpdate"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "MoveMade"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ScoreSubmitted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -402,29 +361,6 @@ export type BatchMetadataUpdateEvent = TypedEvent<
 export type BatchMetadataUpdateEventFilter =
   TypedEventFilter<BatchMetadataUpdateEvent>;
 
-export interface GameCreatedEventObject {
-  gameId: BigNumber;
-  player1: string;
-  player2: string;
-}
-export type GameCreatedEvent = TypedEvent<
-  [BigNumber, string, string],
-  GameCreatedEventObject
->;
-
-export type GameCreatedEventFilter = TypedEventFilter<GameCreatedEvent>;
-
-export interface GameEndedEventObject {
-  gameId: BigNumber;
-  winner: string;
-}
-export type GameEndedEvent = TypedEvent<
-  [BigNumber, string],
-  GameEndedEventObject
->;
-
-export type GameEndedEventFilter = TypedEventFilter<GameEndedEvent>;
-
 export interface MetadataUpdateEventObject {
   _tokenId: BigNumber;
 }
@@ -434,19 +370,6 @@ export type MetadataUpdateEvent = TypedEvent<
 >;
 
 export type MetadataUpdateEventFilter = TypedEventFilter<MetadataUpdateEvent>;
-
-export interface MoveMadeEventObject {
-  gameId: BigNumber;
-  player: string;
-  move: string;
-  timestamp: BigNumber;
-}
-export type MoveMadeEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber],
-  MoveMadeEventObject
->;
-
-export type MoveMadeEventFilter = TypedEventFilter<MoveMadeEvent>;
 
 export interface OwnershipTransferredEventObject {
   previousOwner: string;
@@ -459,6 +382,18 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface ScoreSubmittedEventObject {
+  player: string;
+  rating: BigNumber;
+  won: boolean;
+}
+export type ScoreSubmittedEvent = TypedEvent<
+  [string, BigNumber, boolean],
+  ScoreSubmittedEventObject
+>;
+
+export type ScoreSubmittedEventFilter = TypedEventFilter<ScoreSubmittedEvent>;
 
 export interface TransferEventObject {
   from: string;
@@ -512,43 +447,14 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    createGame(
-      opponent: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    endGame(
-      gameId: PromiseOrValue<BigNumberish>,
-      winner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    gameCounter(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    games(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber, number, string] & {
-        player1: string;
-        player2: string;
-        startTime: BigNumber;
-        status: number;
-        winner: string;
-      }
-    >;
-
-    getActiveGames(overrides?: CallOverrides): Promise<[BigNumber[]]>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    getGameState(
-      gameId: PromiseOrValue<BigNumberish>,
+    getLeaderboard(
       overrides?: CallOverrides
-    ): Promise<[QuantumChessArena.GameStructOutput]>;
+    ): Promise<[QuantumChessArena.LeaderboardEntryStructOutput[]]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -556,11 +462,17 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    makeMove(
-      gameId: PromiseOrValue<BigNumberish>,
-      move: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    leaderboard(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber] & {
+        player: string;
+        rating: BigNumber;
+        gamesPlayed: BigNumber;
+        gamesWon: BigNumber;
+      }
+    >;
 
     mintAchievement(
       player: PromiseOrValue<string>,
@@ -610,6 +522,11 @@ export interface QuantumChessArena extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    submitScore(
+      won: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -664,43 +581,14 @@ export interface QuantumChessArena extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  createGame(
-    opponent: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  endGame(
-    gameId: PromiseOrValue<BigNumberish>,
-    winner: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  gameCounter(overrides?: CallOverrides): Promise<BigNumber>;
-
-  games(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, string, BigNumber, number, string] & {
-      player1: string;
-      player2: string;
-      startTime: BigNumber;
-      status: number;
-      winner: string;
-    }
-  >;
-
-  getActiveGames(overrides?: CallOverrides): Promise<BigNumber[]>;
-
   getApproved(
     tokenId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
-  getGameState(
-    gameId: PromiseOrValue<BigNumberish>,
+  getLeaderboard(
     overrides?: CallOverrides
-  ): Promise<QuantumChessArena.GameStructOutput>;
+  ): Promise<QuantumChessArena.LeaderboardEntryStructOutput[]>;
 
   isApprovedForAll(
     owner: PromiseOrValue<string>,
@@ -708,11 +596,17 @@ export interface QuantumChessArena extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  makeMove(
-    gameId: PromiseOrValue<BigNumberish>,
-    move: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  leaderboard(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, BigNumber, BigNumber, BigNumber] & {
+      player: string;
+      rating: BigNumber;
+      gamesPlayed: BigNumber;
+      gamesWon: BigNumber;
+    }
+  >;
 
   mintAchievement(
     player: PromiseOrValue<string>,
@@ -762,6 +656,11 @@ export interface QuantumChessArena extends BaseContract {
   setApprovalForAll(
     operator: PromiseOrValue<string>,
     approved: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  submitScore(
+    won: PromiseOrValue<boolean>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -816,43 +715,14 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    createGame(
-      opponent: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    endGame(
-      gameId: PromiseOrValue<BigNumberish>,
-      winner: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    gameCounter(overrides?: CallOverrides): Promise<BigNumber>;
-
-    games(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<
-      [string, string, BigNumber, number, string] & {
-        player1: string;
-        player2: string;
-        startTime: BigNumber;
-        status: number;
-        winner: string;
-      }
-    >;
-
-    getActiveGames(overrides?: CallOverrides): Promise<BigNumber[]>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
-    getGameState(
-      gameId: PromiseOrValue<BigNumberish>,
+    getLeaderboard(
       overrides?: CallOverrides
-    ): Promise<QuantumChessArena.GameStructOutput>;
+    ): Promise<QuantumChessArena.LeaderboardEntryStructOutput[]>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -860,11 +730,17 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    makeMove(
-      gameId: PromiseOrValue<BigNumberish>,
-      move: PromiseOrValue<string>,
+    leaderboard(
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<
+      [string, BigNumber, BigNumber, BigNumber] & {
+        player: string;
+        rating: BigNumber;
+        gamesPlayed: BigNumber;
+        gamesWon: BigNumber;
+      }
+    >;
 
     mintAchievement(
       player: PromiseOrValue<string>,
@@ -912,6 +788,11 @@ export interface QuantumChessArena extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    submitScore(
+      won: PromiseOrValue<boolean>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -996,41 +877,8 @@ export interface QuantumChessArena extends BaseContract {
       _toTokenId?: null
     ): BatchMetadataUpdateEventFilter;
 
-    "GameCreated(uint256,address,address)"(
-      gameId?: PromiseOrValue<BigNumberish> | null,
-      player1?: PromiseOrValue<string> | null,
-      player2?: PromiseOrValue<string> | null
-    ): GameCreatedEventFilter;
-    GameCreated(
-      gameId?: PromiseOrValue<BigNumberish> | null,
-      player1?: PromiseOrValue<string> | null,
-      player2?: PromiseOrValue<string> | null
-    ): GameCreatedEventFilter;
-
-    "GameEnded(uint256,address)"(
-      gameId?: PromiseOrValue<BigNumberish> | null,
-      winner?: PromiseOrValue<string> | null
-    ): GameEndedEventFilter;
-    GameEnded(
-      gameId?: PromiseOrValue<BigNumberish> | null,
-      winner?: PromiseOrValue<string> | null
-    ): GameEndedEventFilter;
-
     "MetadataUpdate(uint256)"(_tokenId?: null): MetadataUpdateEventFilter;
     MetadataUpdate(_tokenId?: null): MetadataUpdateEventFilter;
-
-    "MoveMade(uint256,address,string,uint256)"(
-      gameId?: PromiseOrValue<BigNumberish> | null,
-      player?: PromiseOrValue<string> | null,
-      move?: null,
-      timestamp?: null
-    ): MoveMadeEventFilter;
-    MoveMade(
-      gameId?: PromiseOrValue<BigNumberish> | null,
-      player?: PromiseOrValue<string> | null,
-      move?: null,
-      timestamp?: null
-    ): MoveMadeEventFilter;
 
     "OwnershipTransferred(address,address)"(
       previousOwner?: PromiseOrValue<string> | null,
@@ -1040,6 +888,17 @@ export interface QuantumChessArena extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "ScoreSubmitted(address,uint256,bool)"(
+      player?: PromiseOrValue<string> | null,
+      rating?: null,
+      won?: null
+    ): ScoreSubmittedEventFilter;
+    ScoreSubmitted(
+      player?: PromiseOrValue<string> | null,
+      rating?: null,
+      won?: null
+    ): ScoreSubmittedEventFilter;
 
     "Transfer(address,address,uint256)"(
       from?: PromiseOrValue<string> | null,
@@ -1067,35 +926,12 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    createGame(
-      opponent: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    endGame(
-      gameId: PromiseOrValue<BigNumberish>,
-      winner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    gameCounter(overrides?: CallOverrides): Promise<BigNumber>;
-
-    games(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getActiveGames(overrides?: CallOverrides): Promise<BigNumber>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getGameState(
-      gameId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
+    getLeaderboard(overrides?: CallOverrides): Promise<BigNumber>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -1103,10 +939,9 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    makeMove(
-      gameId: PromiseOrValue<BigNumberish>,
-      move: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    leaderboard(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     mintAchievement(
@@ -1151,6 +986,11 @@ export interface QuantumChessArena extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    submitScore(
+      won: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1208,35 +1048,12 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    createGame(
-      opponent: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    endGame(
-      gameId: PromiseOrValue<BigNumberish>,
-      winner: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    gameCounter(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    games(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getActiveGames(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     getApproved(
       tokenId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getGameState(
-      gameId: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
+    getLeaderboard(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isApprovedForAll(
       owner: PromiseOrValue<string>,
@@ -1244,10 +1061,9 @@ export interface QuantumChessArena extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    makeMove(
-      gameId: PromiseOrValue<BigNumberish>,
-      move: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    leaderboard(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     mintAchievement(
@@ -1292,6 +1108,11 @@ export interface QuantumChessArena extends BaseContract {
     setApprovalForAll(
       operator: PromiseOrValue<string>,
       approved: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    submitScore(
+      won: PromiseOrValue<boolean>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 

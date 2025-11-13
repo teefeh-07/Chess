@@ -17,7 +17,7 @@ interface LeaderboardEntry {
 export const subscribeToLeaderboard = (contractAddress: string, onData: (leaderboard: LeaderboardEntry[]) => void) => {
   let pollingInterval: NodeJS.Timeout | null = null
 
-  // Poll for leaderboard updates every 5 seconds
+  // Poll for leaderboard updates every 3 seconds
   pollingInterval = setInterval(async () => {
     try {
       const leaderboard = await publicClient.readContract({
@@ -26,7 +26,16 @@ export const subscribeToLeaderboard = (contractAddress: string, onData: (leaderb
           {
             inputs: [],
             name: 'getLeaderboard',
-            outputs: [{ name: '', type: 'tuple[]' }],
+            outputs: [{
+              name: '',
+              type: 'tuple[]',
+              components: [
+                { name: 'player', type: 'address' },
+                { name: 'rating', type: 'uint256' },
+                { name: 'gamesPlayed', type: 'uint256' },
+                { name: 'gamesWon', type: 'uint256' }
+              ]
+            }],
             stateMutability: 'view',
             type: 'function'
           }
@@ -37,7 +46,7 @@ export const subscribeToLeaderboard = (contractAddress: string, onData: (leaderb
     } catch (error) {
       console.error('Leaderboard polling error:', error)
     }
-  }, 5000)
+  }, 3000)
 
   return () => {
     if (pollingInterval) {
