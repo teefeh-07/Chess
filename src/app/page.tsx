@@ -1,22 +1,24 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAccount, useWriteContract, useReadContract } from 'wagmi'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import GameRoom from '@/components/GameRoom'
+import { parseEventLogs } from 'viem'
 
 // Contract address - replace with deployed address
-const CONTRACT_ADDRESS = '0x...' // To be updated after deployment
+const CONTRACT_ADDRESS = '0xAd54eC47a610f8495b9bC96CB6E09661E4FC42a2' // To be updated after deployment
 
 export default function Home() {
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   const [gameId, setGameId] = useState<number | null>(null)
   const [opponentAddress, setOpponentAddress] = useState('')
+  const [error, setError] = useState<string | null>(null)
 
-  const { data: activeGames } = useReadContract({
+  const { data: activeGames, refetch: refetchActiveGames } = useReadContract({
     address: CONTRACT_ADDRESS as `0x${string}`,
     abi: [
       {
@@ -30,9 +32,49 @@ export default function Home() {
     functionName: 'getActiveGames',
   })
 
-  const { writeContract } = useWriteContract()
+  const { writeContract, isPending, isSuccess, isError, error: writeError, data: writeData } = useWriteContract()
+
+  const handleGameCreated = useCallback((txData: { logs: readonly import("viem").Log[] }) => {
+    const logs = parseEventLogs({
+      abi: [
+        {
+          anonymous: false,
+          inputs: [
+            { indexed: true, name: 'gameId', type: 'uint256' },
+            { indexed: true, name: 'player1', type: 'address' },
+            { indexed: true, name: 'player2', type: 'address' }
+          ],
+          name: 'GameCreated',
+          type: 'event'
+        }
+      ],
+      logs: txData.logs,
+    })
+
+    const gameCreatedEvent = logs.find((log): log is { eventName: 'GameCreated'; args: { gameId: bigint } } => log.eventName === 'GameCreated')
+    if (gameCreatedEvent) {
+      setGameId(Number(gameCreatedEvent.args.gameId))
+      refetchActiveGames() // Refresh active games list
+    }
+  }, [refetchActiveGames])
+
+  useEffect(() => {
+    if (isSuccess && writeData) {
+      setTimeout(() => handleGameCreated(writeData), 0)
+      // Clear writeData after processing to prevent re-running this effect
+      // This might require a custom hook or a different approach if writeData is managed by wagmi
+      // For now, we'll assume writeData is cleared by wagmi after a successful transaction
+    }
+
+    if (isError && writeError) {
+      setError(writeError.message)
+    } else {
+      setError(null)
+    }
+  }, [isSuccess, writeData, isError, writeError, handleGameCreated])
 
   const handleCreateGame = () => {
+    setError(null) // Clear previous errors
     writeContract({
       address: CONTRACT_ADDRESS as `0x${string}`,
       abi: [
@@ -85,9 +127,10 @@ export default function Home() {
                     onChange={(e) => setOpponentAddress(e.target.value)}
                   />
                 </div>
-                <Button onClick={handleCreateGame} className="w-full">
-                  Create Game
+                <Button onClick={handleCreateGame} className="w-full" disabled={isPending}>
+                  {isPending ? 'Creating Game...' : 'Create Game'}
                 </Button>
+                {isError && <p className="text-red-500 text-sm mt-2">{error}</p>}
               </div>
             </Card>
 

@@ -7,8 +7,11 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
+import "./ChessLogic.sol";
+
 contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownable {
     using Strings for uint256;
+    using ChessLogic for uint8[64]; // Use ChessLogic library for board operations
 
     struct Game {
         address player1;
@@ -17,6 +20,7 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
         uint256 startTime;
         uint8 status; // 0: waiting, 1: active, 2: finished
         address winner;
+        uint8[64] board; // Add board state to the Game struct
     }
 
     struct PlayerStats {
@@ -35,18 +39,18 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
     event GameEnded(uint256 indexed gameId, address indexed winner);
     event AchievementMinted(uint256 indexed tokenId, address indexed player, string achievementType);
 
-    constructor() ERC721("Quantum Chess Achievements", "QCA") {}
+    constructor() ERC721("Quantum Chess Achievements", "QCA") Ownable(msg.sender) {}
 
     function createGame(address opponent) public returns (uint256 gameId) {
         gameId = ++gameCounter;
-        games[gameId] = Game({
-            player1: msg.sender,
-            player2: opponent,
-            moves: new string[](0),
-            startTime: block.timestamp,
-            status: 1,
-            winner: address(0)
-        });
+        
+        Game storage newGame = games[gameId];
+        newGame.player1 = msg.sender;
+        newGame.player2 = opponent;
+        newGame.startTime = block.timestamp;
+        newGame.status = 1;
+        
+        newGame.board.initializeBoard(); // Initialize the board using ChessLogic library
 
         playerStats[msg.sender].gamesPlayed++;
         if (opponent != address(0)) {
@@ -61,8 +65,29 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
         require(game.status == 1, "Game not active");
         require(msg.sender == game.player1 || msg.sender == game.player2, "Not a player in this game");
 
+        // Parse move string (e.g., "e2e4")
+        require(bytes(move).length == 4, "Invalid move format (expected e.g., 'e2e4')");
+        string memory fromCoord = substring(move, 0, 2);
+        string memory toCoord = substring(move, 2, 4);
+
+        bool isWhiteTurn = (game.moves.length % 2 == 0); // White moves first
+
+        require(game.board.isValidMove(fromCoord, toCoord, isWhiteTurn), "Invalid chess move");
+
+        game.board.applyMove(fromCoord, toCoord);
         game.moves.push(move);
         emit MoveMade(gameId, msg.sender, move, block.timestamp);
+
+        // Determine whose turn it is next
+        bool nextIsWhiteTurn = (game.moves.length % 2 == 0);
+
+        // Check for checkmate or stalemate
+        if (game.board._isCheckmate(nextIsWhiteTurn)) {
+            address winner = msg.sender; // Current player is the winner
+            endGame(gameId, winner);
+        } else if (game.board._isStalemate(nextIsWhiteTurn)) {
+            endGame(gameId, address(0)); // Draw
+        }
     }
 
     function endGame(uint256 gameId, address winner) public {
@@ -76,6 +101,11 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
         if (winner != address(0)) {
             playerStats[winner].gamesWon++;
             updateRating(winner, true);
+
+            // Check for first win achievement
+            if (playerStats[winner].gamesWon == 1) {
+                mintAchievement(winner, "FirstWin");
+            }
         }
 
         emit GameEnded(gameId, winner);
@@ -108,9 +138,16 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
         }
 
         uint256 k = 32; // K-factor
-        uint256 expectedScore = 1 / (1 + 10 ** ((stats.rating - 1200) / 400));
-        uint256 actualScore = won ? 1 : 0;
-        int256 ratingChange = int256(k) * (int256(actualScore) - int256(expectedScore));
+
+        // Simplified ELO calculation (linear approximation)
+        // This is a very basic approximation and not a true ELO calculation
+        // A more accurate ELO would require fixed-point math or a lookup table for exponentiation
+        int256 ratingChange;
+        if (won) {
+            ratingChange = int256(k);
+        } else {
+            ratingChange = -int256(k);
+        }
 
         stats.rating = uint256(int256(stats.rating) + ratingChange);
     }
@@ -137,5 +174,15 @@ contract QuantumChessArena is ERC721, ERC721URIStorage, ERC721Enumerable, Ownabl
 
     function supportsInterface(bytes4 interfaceId) public view override(ERC721, ERC721Enumerable, ERC721URIStorage) returns (bool) {
         return super.supportsInterface(interfaceId);
+    }
+
+    // Utility function to get a substring
+    function substring(string memory str, uint startIndex, uint endIndex) internal pure returns (string memory) {
+        bytes memory strBytes = bytes(str);
+        bytes memory result = new bytes(endIndex - startIndex);
+        for (uint i = startIndex; i < endIndex; i++) {
+            result[i - startIndex] = strBytes[i];
+        }
+        return string(result);
     }
 }

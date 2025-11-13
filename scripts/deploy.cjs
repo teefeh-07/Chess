@@ -6,9 +6,9 @@ async function main() {
   const QuantumChessArena = await ethers.getContractFactory("QuantumChessArena");
   const quantumChessArena = await QuantumChessArena.deploy();
 
-  await quantumChessArena.waitForDeployment();
+  await quantumChessArena.deployed();
 
-  const contractAddress = await quantumChessArena.getAddress();
+  const contractAddress = quantumChessArena.address;
   console.log("QuantumChessArena deployed to:", contractAddress);
 
   // Save deployment info
