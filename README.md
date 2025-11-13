@@ -1,4 +1,4 @@
-# Quantum Chess Arena
+# Chess 
 
 Real-time blockchain chess battles powered by Somnia Data Streams (SDS) on Somnia Testnet.
 
