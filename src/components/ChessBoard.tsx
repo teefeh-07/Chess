@@ -40,12 +40,6 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
   }, [gameState, chess])
 
   useEffect(() => {
-    // This effect should only run when gameState or chess object changes
-    // The actual board update is handled by updateBoardState which is a useCallback
-    // and will only trigger setBoard when gameState.moves changes.
-    // The linter might be complaining about the direct call to updateBoardState.
-    // However, updateBoardState itself is memoized and its dependencies are correct.
-    // For now, we will keep it as is, as it's a common pattern for synchronizing external state.
     setTimeout(() => updateBoardState(), 0)
   }, [updateBoardState])
 
@@ -57,12 +51,12 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
       const moves = chess.moves({ square: squareName, verbose: true })
       setPossibleMoves(moves.map(m => m.to))
     } else {
-      e.preventDefault() // Prevent dragging if not player's piece or not player's turn
+      e.preventDefault()
     }
   }
 
   const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault() // Allow dropping
+    e.preventDefault()
   }
 
   const handleDrop = (e: React.DragEvent, targetSquare: Square) => {
@@ -83,7 +77,7 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
         const move = chess.move({
           from: fromSquare,
           to: targetSquare,
-          promotion: 'q' // Default to queen if not promotion
+          promotion: 'q'
         })
 
         if (move) {
@@ -92,7 +86,6 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
           setSelectedSquare(null)
           setPossibleMoves([])
         } else {
-          // Invalid drop, clear selection
           setSelectedSquare(null)
           setPossibleMoves([])
         }
@@ -121,11 +114,10 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
         setPromotionSquare(square)
         setPromotionMove({ from: selectedSquare, to: square })
       } else {
-        // Try to make a move
         const move = chess.move({
           from: selectedSquare,
           to: square,
-          promotion: 'q' // Always promote to queen for simplicity
+          promotion: 'q'
         })
 
         if (move) {
@@ -134,14 +126,12 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
           setSelectedSquare(null)
           setPossibleMoves([])
         } else {
-          // Invalid move, select new square
           setSelectedSquare(square)
           const moves = chess.moves({ square, verbose: true })
           setPossibleMoves(moves.map(m => m.to))
         }
       }
     } else {
-      // Select piece
       const piece = chess.get(square)
       if (piece && piece.color === chess.turn()) {
         setSelectedSquare(square)
@@ -180,23 +170,28 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
     return (
       <div
         key={squareName}
-        className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 flex items-center justify-center ${
-          isLight ? 'bg-amber-100 dark:bg-amber-200' : 'bg-amber-800 dark:bg-amber-900'
-        } ${isSelected ? 'ring-2 ring-blue-500' : ''} ${
-          isPossibleMove ? 'ring-2 ring-green-500' : ''
-        } transition-colors duration-200`}
+        className={`w-12 h-12 sm:w-14 sm:h-14 lg:w-16 lg:h-16 flex items-center justify-center cursor-pointer transition-all duration-200 hover:scale-105 ${
+          isLight ? 'bg-amber-50 dark:bg-amber-100' : 'bg-amber-900 dark:bg-amber-800'
+        } ${isSelected ? 'ring-4 ring-blue-500 dark:ring-blue-400' : ''} ${
+          isPossibleMove ? 'ring-4 ring-green-500 dark:ring-green-400' : ''
+        }`}
         onClick={() => handleSquareClick(squareName)}
         onDragOver={handleDragOver}
         onDrop={(e) => handleDrop(e, squareName)}
       >
         {piece && (
           <span
-            className={`text-xl sm:text-2xl lg:text-3xl ${piece.color === 'w' ? 'text-white drop-shadow-lg' : 'text-black dark:text-gray-900'} cursor-grab select-none`}
+            className={`text-2xl sm:text-3xl lg:text-4xl select-none ${
+              piece.color === 'w' ? 'text-white drop-shadow-lg' : 'text-black dark:text-gray-900'
+            } ${isPlayerTurn && piece.color === chess.turn() ? 'cursor-grab hover:scale-110' : 'cursor-default'}`}
             draggable={isPlayerTurn && piece.color === chess.turn()}
             onDragStart={(e) => handleDragStart(e, squareName)}
           >
             {getPieceSymbol(piece.type, piece.color)}
           </span>
+        )}
+        {isPossibleMove && !piece && (
+          <div className="w-3 h-3 bg-green-500 dark:bg-green-400 rounded-full opacity-70"></div>
         )}
       </div>
     )
@@ -215,32 +210,32 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
   }
 
   return (
-    <div className="bg-card border-2 border-border rounded-lg overflow-hidden shadow-lg">
+    <div className="bg-card border-2 border-border rounded-xl overflow-hidden shadow-2xl">
       <div className="grid grid-cols-8 gap-0">
         {board.map((row, rowIndex) =>
           row.map((square, colIndex) => renderSquare(square, rowIndex, colIndex))
         )}
       </div>
       {promotionSquare && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <Card className="p-6 max-w-sm mx-4">
-            <h3 className="text-xl font-semibold mb-4 text-center">Promote Pawn to:</h3>
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50">
+          <Card className="p-6 max-w-sm mx-4 bg-card border-border">
+            <h3 className="text-xl font-semibold mb-4 text-center text-foreground">Promote Pawn to:</h3>
             <div className="flex justify-center space-x-3">
-              <Button onClick={() => handlePromotionSelect('q')} size="lg" className="text-2xl">♕</Button>
-              <Button onClick={() => handlePromotionSelect('r')} size="lg" className="text-2xl">♖</Button>
-              <Button onClick={() => handlePromotionSelect('b')} size="lg" className="text-2xl">♗</Button>
-              <Button onClick={() => handlePromotionSelect('n')} size="lg" className="text-2xl">♘</Button>
+              <Button onClick={() => handlePromotionSelect('q')} size="lg" className="text-2xl hover:scale-110 transition-transform">♕</Button>
+              <Button onClick={() => handlePromotionSelect('r')} size="lg" className="text-2xl hover:scale-110 transition-transform">♖</Button>
+              <Button onClick={() => handlePromotionSelect('b')} size="lg" className="text-2xl hover:scale-110 transition-transform">♗</Button>
+              <Button onClick={() => handlePromotionSelect('n')} size="lg" className="text-2xl hover:scale-110 transition-transform">♘</Button>
             </div>
           </Card>
         </div>
       )}
-      <div className="mt-4 text-center space-y-1">
+      <div className="mt-6 text-center space-y-2">
         <p className={`text-sm font-medium ${isPlayerTurn ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
           {isPlayerTurn ? "Your turn" : "Opponent's turn"}
         </p>
-        {chess.isCheckmate() && <p className="text-red-600 dark:text-red-400 font-bold">Checkmate!</p>}
-        {chess.isStalemate() && <p className="text-yellow-600 dark:text-yellow-400 font-bold">Stalemate!</p>}
-        {chess.inCheck() && <p className="text-orange-600 dark:text-orange-400 font-bold">Check!</p>}
+        {chess.isCheckmate() && <p className="text-red-600 dark:text-red-400 font-bold text-lg">Checkmate!</p>}
+        {chess.isStalemate() && <p className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">Stalemate!</p>}
+        {chess.inCheck() && <p className="text-orange-600 dark:text-orange-400 font-bold text-lg">Check!</p>}
       </div>
     </div>
   )
