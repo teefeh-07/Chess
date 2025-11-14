@@ -244,7 +244,7 @@ export default function GameRoom({ gameId, contractAddress }: GameRoomProps) {
                       {submitting ? 'Submitting...' : 'Submit Score'}
                     </Button>
                     <Button onClick={resetGame} variant="outline" className="w-full">
-                      New Game
+                      Live Dashboard
                     </Button>
                   </div>
                 </Card>

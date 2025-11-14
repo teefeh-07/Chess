@@ -1,24 +1,16 @@
-# Quantum Chess Arena - Implementation Plan
+# Quantum Chess Arena - Current Tasks
 
-## 1. Fix React Hydration Mismatch
-- [ ] Update src/app/page.tsx to render grid layout consistently, conditionally show content inside to avoid SSR mismatch.
+## 1. UI Enhancements (High Priority)
+- [ ] Add dark mode support to landing page with toggle button
+- [ ] Add "Live Dashboard" button in GameRoom after game ends for navigation back to dashboard
+- [ ] Change "Start Local Game" button text to "Start Game"
 
-## 2. Fix SDS Client Subscription
-- [ ] Modify src/lib/sdsClient.ts to use polling instead of subscribe method; implement leaderboard subscription for real-time updates.
+## Implementation Plan
+- Update `src/app/page.tsx` to include dark mode state, toggle button, and apply dark theme classes
+- Update `src/components/GameRoom.tsx` to add "Live Dashboard" button in game over section that navigates back to dashboard
+- Change button text in landing page
 
-## 3. Update Smart Contract for Score Submission
-- [ ] Edit contracts/QuantumChessArena.sol: Remove createGame/makeMove functions; add submitScore function; add leaderboard mapping for player rankings.
-
-## 4. Modify GameRoom for Local Chess Logic
-- [ ] Update src/components/GameRoom.tsx: Use chess.js for local game logic instead of on-chain moves; add score submission at game end.
-
-## 5. Update Main Page for Local Games and Leaderboard
-- [ ] Modify src/app/page.tsx: Allow starting local games without on-chain creation; add leaderboard display component.
-
-## 6. Deploy Updated Contract
-- [ ] Run hardhat deploy script to deploy modified contract to Somnia Testnet; update contract address in code.
-
-## 7. Testing and Verification
-- [ ] Test local game flow: Start game, play moves locally, submit score after game ends.
-- [ ] Verify SDS leaderboard updates in real-time.
-- [ ] Confirm no hydration errors and SDS functionality works.
+## Followup Steps
+- Test dark mode toggle on landing page
+- Test navigation back to dashboard from game room
+- Commit and push changes to GitHub
