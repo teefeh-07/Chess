@@ -215,8 +215,8 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
   }
 
   return (
-    <Card className="bg-card">
-      <div className="grid grid-cols-8 gap-0 border-2 border-border rounded-lg overflow-hidden shadow-lg">
+    <div className="bg-card border-2 border-border rounded-lg overflow-hidden shadow-lg">
+      <div className="grid grid-cols-8 gap-0">
         {board.map((row, rowIndex) =>
           row.map((square, colIndex) => renderSquare(square, rowIndex, colIndex))
         )}
@@ -242,6 +242,6 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
         {chess.isStalemate() && <p className="text-yellow-600 dark:text-yellow-400 font-bold">Stalemate!</p>}
         {chess.inCheck() && <p className="text-orange-600 dark:text-orange-400 font-bold">Check!</p>}
       </div>
-    </Card>
+    </div>
   )
 }
