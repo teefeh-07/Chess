@@ -76,7 +76,7 @@ export default function Home() {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-2xl font-semibold mb-4">Leaderboard</h2>
+            <h2 className="text-2xl font-semibold mb-4 text-foreground">Leaderboard</h2>
             <LeaderboardDisplay contractAddress={CONTRACT_ADDRESS} />
           </Card>
         </div>
