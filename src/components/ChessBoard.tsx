@@ -211,7 +211,7 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
 
   return (
     <div className="bg-card border-2 border-border rounded-xl overflow-hidden shadow-2xl">
-      <div className="grid grid-cols-8 gap-0">
+      <div className="grid grid-cols-8 gap-0 w-fit">
         {board.map((row, rowIndex) =>
           row.map((square, colIndex) => renderSquare(square, rowIndex, colIndex))
         )}
