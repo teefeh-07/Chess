@@ -230,9 +230,6 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
         </div>
       )}
       <div className="mt-6 text-center space-y-2">
-        <p className={`text-sm font-medium ${isPlayerTurn ? 'text-green-600 dark:text-green-400' : 'text-muted-foreground'}`}>
-          {isPlayerTurn ? "Your turn" : "Opponent's turn"}
-        </p>
         {chess.isCheckmate() && <p className="text-red-600 dark:text-red-400 font-bold text-lg">Checkmate!</p>}
         {chess.isStalemate() && <p className="text-yellow-600 dark:text-yellow-400 font-bold text-lg">Stalemate!</p>}
         {chess.inCheck() && <p className="text-orange-600 dark:text-orange-400 font-bold text-lg">Check!</p>}
