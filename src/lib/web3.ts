@@ -1,12 +1,4 @@
-import { createConfig, http } from 'wagmi'
-import { somniaTestnet } from 'wagmi/chains'
-
-export const config = createConfig({
-  chains: [somniaTestnet],
-  transports: {
-    [somniaTestnet.id]: http('https://dream-rpc.somnia.network'),
-  },
-})
+ import { createConfig, http } from 'wagmi'
 
 export const somniaTestnetChain = {
   id: 50312,
@@ -26,3 +18,10 @@ export const somniaTestnetChain = {
   },
   testnet: true,
 }
+
+export const config = createConfig({
+  chains: [somniaTestnetChain],
+  transports: {
+    [somniaTestnetChain.id]: http('https://dream-rpc.somnia.network'),
+  },
+})
