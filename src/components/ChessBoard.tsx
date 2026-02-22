@@ -17,6 +17,17 @@ interface GameState {
 // Chess game constants
 const BOARD_SIZE = 8;
 const INITIAL_TIMER_MINUTES = 10;
+const PIECE_SYMBOLS = {
+  QUEEN: 'q' as PieceSymbol,
+  ROOK: 'r' as PieceSymbol,
+  BISHOP: 'b' as PieceSymbol,
+  KNIGHT: 'n' as PieceSymbol,
+} as const;
+
+const CHESS_COLORS = {
+  WHITE: 'w',
+  BLACK: 'b',
+} as const;
 
 /**
  * Checks if a move results in pawn promotion
