@@ -1,0 +1,1 @@
+export const throttle = (fn: Function, limit: number) => { let inThrottle: boolean; return (...args: any[]) => { if (!inThrottle) { fn(...args); inThrottle = true; setTimeout(() => inThrottle = false, limit); } }; };
