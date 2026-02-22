@@ -121,6 +121,10 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
     }
   }
 
+  /**
+   * Handles square click events for piece selection and movement
+   * @param square - The square that was clicked
+   */
   const handleSquareClick = (square: Square) => {
     if (!isPlayerTurn) return
 
