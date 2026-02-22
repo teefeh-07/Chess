@@ -72,6 +72,11 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
     e.preventDefault()
   }
 
+  /**
+   * Handles piece drop events and processes chess moves
+   * @param e - The drop event
+   * @param targetSquare - The square where the piece is being dropped
+   */
   const handleDrop = (e: React.DragEvent, targetSquare: Square) => {
     e.preventDefault()
     const fromSquare = e.dataTransfer.getData('square') as Square
