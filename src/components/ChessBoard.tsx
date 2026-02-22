@@ -47,6 +47,11 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
     setTimeout(() => updateBoardState(), 0)
   }, [updateBoardState])
 
+  /**
+   * Handles the start of a drag operation for chess pieces
+   * @param e - The drag event
+   * @param squareName - The square being dragged from
+   */
   const handleDragStart = (e: React.DragEvent, squareName: Square) => {
     const piece = chess.get(squareName)
     if (isPlayerTurn && piece && piece.color === chess.turn()) {
