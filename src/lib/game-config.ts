@@ -1,0 +1,1 @@
+export const GAME_CONFIG = { MAX_PLAYERS: 2, MIN_MOVE_TIME: 1000, MAX_GAME_TIME: 7200000 } as const
