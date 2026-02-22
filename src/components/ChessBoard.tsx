@@ -64,6 +64,10 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
     }
   }
 
+  /**
+   * Handles drag over events for valid drop zones
+   * @param e - The drag event
+   */
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
   }
