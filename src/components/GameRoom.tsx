@@ -135,29 +135,33 @@ export default function GameRoom({ gameId, contractAddress }: GameRoomProps) {
     })
   }
 
+  /**
+   * Toggles the game pause state
+   */
   const togglePause = () => {
     setIsPaused(!isPaused)
   }
 
+  /**
+   * Resets the game to initial state
+   */
   const resetGame = () => {
     chess.reset()
     setGameOver(false)
     setWinner(null)
     setIsPaused(false)
-    setWhiteTime(600)
-    setBlackTime(600)
+    setWhiteTime(INITIAL_TIME_SECONDS)
+    setBlackTime(INITIAL_TIME_SECONDS)
     setCurrentTurn('w')
   }
 
+  /**
+   * Ends the current game and declares a draw
+   */
   const endGame = () => {
     setGameOver(true)
     setWinner(null) // Force draw
   }
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = seconds % 60
-    return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
   const goToDashboard = () => {
