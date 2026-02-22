@@ -241,6 +241,23 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
   }
 
 /**
+ * Generates CSS classes for a chess piece
+ * @param piece - The chess piece
+ * @param isPlayerTurn - Whether it's the current player's turn
+ * @param currentTurn - The current player's color
+ * @returns Combined CSS class string for the piece
+ */
+const getPieceClasses = (piece: Piece, isPlayerTurn: boolean, currentTurn: string): string => {
+  const baseClasses = PIECE_CLASSES.BASE;
+  const colorClasses = piece.color === CHESS_COLORS.WHITE ? PIECE_CLASSES.WHITE : PIECE_CLASSES.BLACK;
+  const interactionClasses = (isPlayerTurn && piece.color === currentTurn) 
+    ? PIECE_CLASSES.DRAGGABLE 
+    : PIECE_CLASSES.NON_DRAGGABLE;
+  
+  return `${baseClasses} ${colorClasses} ${interactionClasses}`;
+};
+
+/**
  * Generates CSS classes for a chess square
  * @param isLight - Whether the square is light colored
  * @param isSelected - Whether the square is currently selected
@@ -280,9 +297,7 @@ const getSquareClasses = (isLight: boolean, isSelected: boolean, isPossibleMove:
       >
         {piece && (
           <span
-            className={`text-2xl sm:text-3xl lg:text-4xl select-none ${
-              piece.color === 'w' ? 'text-white drop-shadow-lg' : 'text-black dark:text-gray-900'
-            } ${isPlayerTurn && piece.color === chess.turn() ? 'cursor-grab hover:scale-110' : 'cursor-default'}`}
+            className={getPieceClasses(piece, isPlayerTurn, chess.turn())}
             draggable={isPlayerTurn && piece.color === chess.turn()}
             onDragStart={(e) => handleDragStart(e, squareName)}
           >
