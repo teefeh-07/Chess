@@ -30,6 +30,16 @@ const CHESS_COLORS = {
 } as const;
 
 /**
+ * Generates a chess square name from board coordinates
+ * @param rowIndex - The row index (0-7)
+ * @param colIndex - The column index (0-7)
+ * @returns The square name (e.g., 'a1', 'h8')
+ */
+const getSquareName = (rowIndex: number, colIndex: number): Square => {
+  return (String.fromCharCode(97 + colIndex) + (8 - rowIndex)) as Square;
+};
+
+/**
  * Checks if a move results in pawn promotion
  * @param piece - The chess piece being moved
  * @param targetSquare - The destination square
@@ -204,7 +214,7 @@ export default function ChessBoard({ onMove, isPlayerTurn, gameState }: ChessBoa
   }
 
   const renderSquare = (square: Piece | null, rowIndex: number, colIndex: number) => {
-    const squareName = String.fromCharCode(97 + colIndex) + (8 - rowIndex) as Square
+    const squareName = getSquareName(rowIndex, colIndex)
     const isLight = (rowIndex + colIndex) % 2 === 0
     const isSelected = selectedSquare === squareName
     const isPossibleMove = possibleMoves.includes(squareName)
