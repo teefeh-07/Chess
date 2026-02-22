@@ -9,6 +9,10 @@ import { ThemeToggle } from '@/components/ThemeToggle'
 import { Chess } from 'chess.js'
 import { Play, Pause, RotateCcw, Square } from 'lucide-react'
 
+// Game constants
+const INITIAL_TIME_SECONDS = 600; // 10 minutes
+const TIMER_INTERVAL_MS = 1000; // 1 second
+
 interface GameRoomProps {
   gameId: number
   contractAddress: string
@@ -21,8 +25,8 @@ export default function GameRoom({ gameId, contractAddress }: GameRoomProps) {
   const [winner, setWinner] = useState<boolean | null>(null)
   const [submitting, setSubmitting] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
-  const [whiteTime, setWhiteTime] = useState(600) // 10 minutes in seconds
-  const [blackTime, setBlackTime] = useState(600)
+  const [whiteTime, setWhiteTime] = useState(INITIAL_TIME_SECONDS)
+  const [blackTime, setBlackTime] = useState(INITIAL_TIME_SECONDS)
   const [currentTurn, setCurrentTurn] = useState<'w' | 'b'>('w')
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
