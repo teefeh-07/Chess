@@ -103,6 +103,10 @@ export default function GameRoom({ gameId, contractAddress }: GameRoomProps) {
     }
   }
 
+  /**
+   * Submits the game result to the blockchain
+   * @param won - Whether the current player won the game
+   */
   const handleSubmitScore = (won: boolean) => {
     setSubmitting(true)
     writeContract({
