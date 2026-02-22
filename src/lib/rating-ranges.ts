@@ -1,0 +1,1 @@
+export const RATING_RANGES = { BEGINNER: [0, 800], INTERMEDIATE: [800, 1600], ADVANCED: [1600, 2400] } as const
