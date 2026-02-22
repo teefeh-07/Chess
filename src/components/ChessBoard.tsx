@@ -14,6 +14,10 @@ interface GameState {
   winner: string;
 }
 
+// Chess game constants
+const BOARD_SIZE = 8;
+const INITIAL_TIMER_MINUTES = 10;
+
 interface ChessBoardProps {
   gameId: number
   onMove: (move: string) => void
