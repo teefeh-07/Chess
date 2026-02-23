@@ -6,4 +6,10 @@ export interface PlayerProfile {
 
 export class Matchmaker {
   private queue: PlayerProfile[] = [];
+
+  public joinQueue(player: PlayerProfile) {
+    if (!this.queue.find(p => p.id === player.id)) {
+      this.queue.push(player);
+    }
+  }
 }
