@@ -6,3 +6,6 @@ export interface MoveRequest {
   to: string;
   promotion?: string;
 }
+
+export class MoveValidator {
+}
