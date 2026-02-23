@@ -3,3 +3,4 @@ name = "chess-game"
 description = "Clarity smart contracts for chess"
 [project.requirements]
 [project.settings]
+clarity_version = 4
