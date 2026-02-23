@@ -5,3 +5,7 @@ export interface MatchRecord {
   black: string;
   result: string;
 }
+
+export class HistoryManager {
+  private records: MatchRecord[] = [];
+}
