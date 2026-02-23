@@ -8,4 +8,8 @@ export interface MatchRecord {
 
 export class HistoryManager {
   private records: MatchRecord[] = [];
+  
+  public addRecord(record: MatchRecord) {
+    this.records.push(record);
+  }
 }
