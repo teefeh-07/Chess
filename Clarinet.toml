@@ -1,2 +1,3 @@
 [project]
 name = "chess-game"
+description = "Clarity smart contracts for chess"
