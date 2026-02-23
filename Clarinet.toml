@@ -4,3 +4,4 @@ description = "Clarity smart contracts for chess"
 [project.requirements]
 [project.settings]
 clarity_version = 4
+epoch = "3.3"
