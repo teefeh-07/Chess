@@ -8,4 +8,6 @@ export interface MoveRequest {
 }
 
 export class MoveValidator {
+  private game: Chess;
+  constructor(fen?: string) { this.game = new Chess(fen); }
 }
