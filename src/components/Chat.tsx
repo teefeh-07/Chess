@@ -5,3 +5,8 @@ export interface ChatMessage {
   text: string;
   timestamp: number;
 }
+
+export const ChatBox = () => {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  return <div className="chatbox"></div>;
+};
